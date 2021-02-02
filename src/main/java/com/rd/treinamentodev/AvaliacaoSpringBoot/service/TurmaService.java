@@ -32,10 +32,36 @@ public class TurmaService {
         List<TurmaEntity> listEntity = turmaRepository.findAll();
         List<TurmaDTO> listDTO = new ArrayList<>();
 
-        //TODO implementar a conversão da lista de objetos de TurmaEntity para TurmaDTO e retornar a listDTO preenchida
+        for (TurmaEntity entity : listEntity) {
+            TurmaDTO turma = new TurmaDTO();
 
+            List<AlunoEntity> alunosEntity = entity.getAlunos();
+            List<AlunoDTO> alunosDTO = new ArrayList<>();
 
+            for (AlunoEntity alunoEntity : alunosEntity) {
+                AlunoDTO aluno = new AlunoDTO();
+                aluno.setNome(alunoEntity.getNomeAluno());
+                aluno.setCpf(alunoEntity.getCpf());
 
+                alunosDTO.add(aluno);
+            }
+
+            turma.setAlunos(alunosDTO);
+            listDTO.add(turma);
+
+            List<InstrutorEntity> instrutoresEntity = entity.getInstrutores();
+            List<InstrutorDTO> instrutoresDTO = new ArrayList<>();
+            for (InstrutorEntity instrutorEntity : instrutoresEntity) {
+                InstrutorDTO instrutor = new InstrutorDTO();
+                instrutor.setNome(instrutorEntity.getNomeInstrutor());
+                instrutor.setValorHora(instrutorEntity.getValorHora());
+
+                instrutoresDTO.add(instrutor);
+            }
+
+            turma.setInstrutores(instrutoresDTO);
+            listDTO.add(turma);
+        }
 
         return listDTO;
     }

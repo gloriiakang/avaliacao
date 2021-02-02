@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CursoDTO {
 
-    private String nome;
+    private String dsCurso;
 
     private Integer cargaHoraria;
 }

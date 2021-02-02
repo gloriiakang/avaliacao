@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AlunoService {
@@ -15,20 +16,21 @@ public class AlunoService {
     @Autowired
     private AlunoRepository alunoRepository;
 
-
+    // Fabio, nesse método gravar, aparentemente consegui validar o campo CPF,
+    // E ele não grava no banco caso já exista um cpf igual,
+    // porém ele ficou meio esquisito e não deu tempo pra eu deixar ele melhor...
+    @Transactional
     public ResponseEntity gravar(AlunoDTO alunoDTO){
         AlunoEntity entity = new AlunoEntity();
         entity.setNomeAluno(alunoDTO.getNome());
         entity.setCpf(alunoDTO.getCpf());
 
         //TODO validar se o CPF existe no banco antes de existir, caso exista retornar mensagem de erro
-
-
-
-
-        entity = alunoRepository.save(entity);
-
-        ResultData resultData = new ResultData(HttpStatus.CREATED.value(), "Aluno cadastrado com sucesso", entity.getIdAluno());
-        return ResponseEntity.status(HttpStatus.CREATED).body(resultData);
+    if (alunoDTO.getCpf().equals(entity.getCpf())) {
+        System.out.println("CPF já cadastrado!");
+    } else {
+        alunoRepository.save(entity);
+    }
+        return ResponseEntity.status(HttpStatus.CREATED).body("Cadastro realizado!");
     }
 }
